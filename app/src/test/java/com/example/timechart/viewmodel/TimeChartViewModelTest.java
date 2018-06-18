@@ -1,6 +1,7 @@
 package com.example.timechart.viewmodel;
 
 import com.example.timechart.LiveDataTestUtil;
+import com.example.timechart.entity.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,10 @@ public class TimeChartViewModelTest {
     public void load() throws InterruptedException {
         viewModel.load();
 
-        List<Object> list = LiveDataTestUtil.getValue(viewModel.getTimeChart());
+        List<TimeUnit> list = LiveDataTestUtil.getValue(viewModel.getTimeChart());
+        for (TimeUnit timeUnit : list) {
+            System.out.println(timeUnit.getTime() + " : " + timeUnit.getValue());
+        }
         assertNotNull(list);
     }
 }

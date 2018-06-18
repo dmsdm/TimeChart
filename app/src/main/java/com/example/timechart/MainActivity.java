@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.timechart.entity.TimeUnit;
 import com.example.timechart.viewmodel.TimeChartViewModel;
 import com.example.timechart.views.ChartView;
 
@@ -41,10 +42,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void subscribeUi() {
         loadButton.setOnClickListener(this);
-        viewModel.getTimeChart().observe(this, new Observer<List<Object>>() {
+        viewModel.getTimeChart().observe(this, new Observer<List<TimeUnit>>() {
             @Override
-            public void onChanged(@Nullable List<Object> objects) {
-                chartView.setData("loaded: " + objects.size());
+            public void onChanged(@Nullable List<TimeUnit> objects) {
+                chartView.setData(objects);
             }
         });
     }

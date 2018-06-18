@@ -9,18 +9,23 @@ import com.example.timechart.entity.TimeUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class TimeChartViewModel extends ViewModel {
 
-    private MutableLiveData<List<Object>> timeChart = new MutableLiveData<>();
+    private MutableLiveData<List<TimeUnit>> timeChart = new MutableLiveData<>();
 
     public void load() {
-        List<Object> list = new ArrayList<>();
-        list.add(new TimeUnit(new Date().getTime(), 100));
+        List<TimeUnit> list = new ArrayList<>();
+        long endTime = new Date().getTime();
+        Random rand = new Random(100);
+        for (long i = endTime-1000; i <= endTime; i += 100) {
+            list.add(new TimeUnit(i, rand.nextInt(100)));
+        }
         timeChart.setValue(list);
     }
 
-    public LiveData<List<Object>> getTimeChart() {
+    public LiveData<List<TimeUnit>> getTimeChart() {
         return timeChart;
     }
 }
