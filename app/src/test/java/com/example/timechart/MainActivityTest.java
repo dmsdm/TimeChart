@@ -44,4 +44,10 @@ public class MainActivityTest {
     public void hasChartView() {
         assertNotNull(mainActivity.chartView);
     }
+
+    @Test
+    public void hasTimeViews() {
+        assertNotNull(mainActivity.startTime);
+        assertNotNull(mainActivity.endTime);
+    }
 }
