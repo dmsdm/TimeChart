@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.example.timechart.entity.TimeUnit;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 public class TimeChartViewModel extends ViewModel {
 
+    private static final String TAG = "TimeChartViewModel";
     private MutableLiveData<List<TimeUnit>> timeChart = new MutableLiveData<>();
     private MutableLiveData<String> startTime = new MutableLiveData<>();
     private MutableLiveData<String> endTime = new MutableLiveData<>();
@@ -44,5 +46,46 @@ public class TimeChartViewModel extends ViewModel {
 
     public LiveData<String> getEndTime() {
         return endTime;
+    }
+
+    public void setStartDate(int year, int month, int dayOfMonth) {
+        startTime.setValue(getDateWithSameTime(startTime.getValue(), year, month, dayOfMonth));
+    }
+
+    public void setEndDate(int year, int month, int dayOfMonth) {
+        endTime.setValue(getDateWithSameTime(endTime.getValue(), year, month, dayOfMonth));
+    }
+
+    private String getDateWithSameTime(String dateTime, int year, int month, int dayOfMonth) {
+        Date date;
+        try {
+            date = new SimpleDateFormat().parse(dateTime);
+            date.setYear(year-1900);
+            date.setMonth(month);
+            date.setDate(dayOfMonth);
+        } catch (ParseException ignore) {
+            date = new Date(year-1900, month, dayOfMonth);
+        }
+        return new SimpleDateFormat().format(date);
+    }
+
+    public void setStartTime(int hourOfDay, int minute) {
+        startTime.setValue(getTimeWithSameDate(startTime.getValue(), hourOfDay, minute));
+    }
+
+    public void setEndTime(int hourOfDay, int minute) {
+        endTime.setValue(getTimeWithSameDate(endTime.getValue(), hourOfDay, minute));
+    }
+
+    private String getTimeWithSameDate(String dateTime, int hourOfDay, int minute) {
+        Date date;
+        try {
+            date = new SimpleDateFormat().parse(dateTime);
+        } catch (ParseException ignore) {
+            date = new Date();
+        }
+        date.setHours(hourOfDay);
+        date.setMinutes(minute);
+        return new SimpleDateFormat().format(date);
     }
 }

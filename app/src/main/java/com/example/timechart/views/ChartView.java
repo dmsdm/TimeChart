@@ -15,7 +15,6 @@ import java.util.List;
 
 public class ChartView extends View {
 
-
     private static final String TAG = "ChartView";
     private Paint textPaint;
     private int width;
