@@ -10,86 +10,99 @@
         android:id="@+id/chart_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toTopOf="@+id/start_time_label"
         app:layout_constraintEnd_toStartOf="@+id/min_value"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/start_time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_time"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/end_time_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/start_time"
-        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
-
-    <Button
-        android:id="@+id/start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="01.01.2001 01:01"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        app:layout_constraintBottom_toTopOf="@+id/end_time"
-        app:layout_constraintStart_toEndOf="@+id/start_time_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chart_view"
-        app:layout_constraintBaseline_toBaselineOf="@+id/start_time_label"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/min_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="min 0"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/chart_view"
-        app:layout_constraintStart_toEndOf="@+id/chart_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/max_value"/>
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintBottom_toTopOf="@+id/load_button"
+        app:layout_constraintEnd_toStartOf="@+id/max_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/max_value"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="max 100"
-        app:layout_constraintTop_toBottomOf="@+id/min_value"
-        app:layout_constraintStart_toEndOf="@+id/chart_view"
+        app:layout_constraintBottom_toTopOf="@+id/load_button"
+        app:layout_constraintEnd_toStartOf="@+id/avg_value"
+        app:layout_constraintStart_toEndOf="@+id/min_value"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
+
+    <TextView
+        android:id="@+id/avg_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="avg 100"
+        app:layout_constraintBottom_toTopOf="@+id/load_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/chart_view"/>
+        app:layout_constraintStart_toEndOf="@+id/max_value"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
+
+    <TextView
+        android:id="@+id/start_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/start_time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/start_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
+
+    <Button
+        android:id="@+id/start_time"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01.01.2001 01:01"
+        app:layout_constraintBaseline_toBaselineOf="@+id/start_time_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/end_time_label"
+        app:layout_constraintStart_toEndOf="@+id/start_time_label"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
 
     <TextView
         android:id="@+id/end_time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/end_time"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/load_button"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/start_time_label"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/end_time"
-        app:layout_constraintTop_toBottomOf="@+id/start_time_label" />
+        app:layout_constraintStart_toEndOf="@+id/start_time"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
 
     <Button
         android:id="@+id/end_time"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="01.01.2001 01:01"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        app:layout_constraintBottom_toTopOf="@+id/load_button"
+        app:layout_constraintBaseline_toBaselineOf="@+id/end_time_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/load_button"
         app:layout_constraintStart_toEndOf="@+id/end_time_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_time_label"
-        app:layout_constraintBaseline_toBaselineOf="@+id/end_time_label"/>
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
 
     <Button
         android:id="@+id/load_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/load"
+        app:layout_constraintBaseline_toBaselineOf="@+id/start_time_label"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/end_time_label"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/end_time"
+        app:layout_constraintTop_toBottomOf="@+id/chart_view" />
 
 </android.support.constraint.ConstraintLayout>
