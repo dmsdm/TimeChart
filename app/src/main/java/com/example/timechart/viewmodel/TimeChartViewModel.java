@@ -10,13 +10,11 @@ import com.example.timechart.utils.MathUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
-public class TimeChartViewModel extends ViewModel {
+public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnLoadFinishedListener {
 
     private static final String TAG = "TimeChartViewModel";
     private MutableLiveData<List<TimeUnit>> timeChart = new MutableLiveData<>();
@@ -31,14 +29,19 @@ public class TimeChartViewModel extends ViewModel {
     }
 
     public void load() {
-        List<TimeUnit> list = new ArrayList<>();
-        long endTime = new Date().getTime();
-        Random rand = new Random(100);
-        for (long i = endTime-1000; i <= endTime; i += 100) {
-            list.add(new TimeUnit(i, rand.nextInt(100)));
+        try {
+            long start = new SimpleDateFormat().parse(startTime.getValue()).getTime();
+            long end = new SimpleDateFormat().parse(endTime.getValue()).getTime();
+            new TimeChartLoader(this).execute(start, end);
+        } catch (ParseException ignore) {}
+    }
+
+    @Override
+    public void onLoadFinished(List<TimeUnit> timeUnits) {
+        timeChart.setValue(timeUnits);
+        if (timeUnits.size() > 0) {
+            calcStatistics(timeUnits);
         }
-        timeChart.setValue(list);
-        calcStatistics(list);
     }
 
     private void calcStatistics(List<TimeUnit> list) {

@@ -25,8 +25,8 @@ public class ChartView extends View {
     private List<TimeUnit> data;
     private int maxValue;
     private String maxText;
-    private String startDate;
-    private String endDate;
+    private String startDate = "";
+    private String endDate = "";
 
     public ChartView(Context context) {
         super(context);
@@ -60,8 +60,10 @@ public class ChartView extends View {
 
     private void setDates(List<TimeUnit> list) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
-        startDate = simpleDateFormat.format(new Date(list.get(0).getTime()));
-        endDate = simpleDateFormat.format(new Date(list.get(list.size()-1).getTime()));
+        if (list.size() > 0) {
+            startDate = simpleDateFormat.format(new Date(list.get(0).getTime()));
+            endDate = simpleDateFormat.format(new Date(list.get(list.size() - (list.size() > 1 ? 1 : 0)).getTime()));
+        }
     }
 
     private void init() {
