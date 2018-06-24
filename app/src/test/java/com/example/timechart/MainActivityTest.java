@@ -50,4 +50,13 @@ public class MainActivityTest {
         assertNotNull(mainActivity.startTime);
         assertNotNull(mainActivity.endTime);
     }
+
+    @Test
+    public void hasDataViews() {
+        assertNotNull(mainActivity.minValue);
+        assertNotNull(mainActivity.maxValue);
+        assertNotNull(mainActivity.avgValue);
+        assertNotNull(mainActivity.median);
+        assertNotNull(mainActivity.iqRange);
+    }
 }

@@ -3,4 +3,10 @@
     <string name="load">Load</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
+    <string name="no_data">No data</string>
+    <string name="minimum">Min %1$d</string>
+    <string name="maximum">Max %1$d</string>
+    <string name="average">Average %1$d</string>
+    <string name="median">Median %1$d</string>
+    <string name="iq_range">Interquartile range %1$d</string>
 </resources>

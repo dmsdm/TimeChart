@@ -8,9 +8,11 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.timechart.dialogs.DatePickerDialogFragment;
 import com.example.timechart.dialogs.TimePickerDialogFragment;
+import com.example.timechart.entity.Statistics;
 import com.example.timechart.entity.TimeUnit;
 import com.example.timechart.viewmodel.TimeChartViewModel;
 import com.example.timechart.views.ChartView;
@@ -25,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @VisibleForTesting ChartView chartView;
     @VisibleForTesting Button startTime;
     @VisibleForTesting Button endTime;
+    @VisibleForTesting TextView minValue;
+    @VisibleForTesting TextView maxValue;
+    @VisibleForTesting TextView avgValue;
+    @VisibleForTesting TextView median;
+    @VisibleForTesting TextView iqRange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chartView = findViewById(R.id.chart_view);
         startTime = findViewById(R.id.start_time);
         endTime = findViewById(R.id.end_time);
+        minValue = findViewById(R.id.min_value);
+        maxValue = findViewById(R.id.max_value);
+        avgValue = findViewById(R.id.avg_value);
+        median = findViewById(R.id.mdn_value);
+        iqRange = findViewById(R.id.iqr_value);
     }
 
     private void setViewModel() {
@@ -67,6 +79,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(@Nullable String time) {
                 endTime.setText(time);
+            }
+        });
+        viewModel.getCalculatedValues().observe(this, new Observer<Statistics>() {
+            @Override
+            public void onChanged(@Nullable Statistics statistics) {
+                if (statistics != null) {
+                    minValue.setText(getString(R.string.minimum, statistics.minValue));
+                    maxValue.setText(getString(R.string.maximum, statistics.maxValue));
+                    avgValue.setText(getString(R.string.average, statistics.avgValue));
+                    median.setText(getString(R.string.median, statistics.median));
+                    iqRange.setText(getString(R.string.iq_range, statistics.iqRange));
+                }
             }
         });
     }
