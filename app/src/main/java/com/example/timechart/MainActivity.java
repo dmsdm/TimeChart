@@ -17,6 +17,8 @@ import com.example.timechart.entity.TimeUnit;
 import com.example.timechart.viewmodel.TimeChartViewModel;
 import com.example.timechart.views.ChartView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -69,16 +71,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 chartView.setData(objects);
             }
         });
-        viewModel.getStartTime().observe(this, new Observer<String>() {
+        viewModel.getStartTime().observe(this, new Observer<Long>() {
             @Override
-            public void onChanged(@Nullable String time) {
-                startTime.setText(time);
+            public void onChanged(@Nullable Long time) {
+                startTime.setText(new SimpleDateFormat().format(new Date(time)));
             }
         });
-        viewModel.getEndTime().observe(this, new Observer<String>() {
+        viewModel.getEndTime().observe(this, new Observer<Long>() {
             @Override
-            public void onChanged(@Nullable String time) {
-                endTime.setText(time);
+            public void onChanged(@Nullable Long time) {
+                endTime.setText(new SimpleDateFormat().format(new Date(time)));
             }
         });
         viewModel.getCalculatedValues().observe(this, new Observer<Statistics>() {

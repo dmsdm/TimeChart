@@ -6,11 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.example.timechart.entity.Statistics;
 import com.example.timechart.entity.TimeUnit;
-import com.example.timechart.utils.MathUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -18,61 +14,36 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
 
     private static final String TAG = "TimeChartViewModel";
     private MutableLiveData<List<TimeUnit>> timeChart = new MutableLiveData<>();
-    private MutableLiveData<String> startTime = new MutableLiveData<>();
-    private MutableLiveData<String> endTime = new MutableLiveData<>();
+    private MutableLiveData<Long> startTime = new MutableLiveData<>();
+    private MutableLiveData<Long> endTime = new MutableLiveData<>();
     private MutableLiveData<Statistics> statistics = new MutableLiveData<>();
 
     public TimeChartViewModel() {
-        String date = new SimpleDateFormat().format(new Date());
-        startTime.setValue(date);
-        endTime.setValue(date);
+        long endDate = new Date().getTime();
+        long startDate = endDate - 1000*60*60*24*15;
+        startTime.setValue(startDate);
+        endTime.setValue(endDate);
     }
 
     public void load() {
-        try {
-            long start = new SimpleDateFormat().parse(startTime.getValue()).getTime();
-            long end = new SimpleDateFormat().parse(endTime.getValue()).getTime();
-            new TimeChartLoader(this).execute(start, end);
-        } catch (ParseException ignore) {}
+        new TimeChartLoader(this).execute(startTime.getValue(), endTime.getValue());
     }
 
     @Override
-    public void onLoadFinished(List<TimeUnit> timeUnits) {
-        timeChart.setValue(timeUnits);
-        if (timeUnits.size() > 0) {
-            calcStatistics(timeUnits);
-        }
-    }
-
-    private void calcStatistics(List<TimeUnit> list) {
-        int size = list.size();
-        int[] values = new int[size];
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, sum = 0;
-        for (int i = 0; i<size; ++i) {
-            values[i] = list.get(i).getValue();
-            min = Math.min(min, values[i]);
-            max = Math.max(max, values[i]);
-            sum += values[i];
-        }
-        Arrays.sort(values);
-        Statistics stat = new Statistics();
-        stat.minValue = min;
-        stat.maxValue = max;
-        stat.avgValue = sum/size;
-        stat.median = MathUtils.calcMedian(values);
-        stat.iqRange = MathUtils.calcInterquartileRange(values);
-        statistics.setValue(stat);
+    public void onLoadFinished(TimeChartLoader.Result result) {
+        timeChart.setValue(result.timeUnits);
+        statistics.setValue(result.statistics);
     }
 
     public LiveData<List<TimeUnit>> getTimeChart() {
         return timeChart;
     }
 
-    public LiveData<String> getStartTime() {
+    public LiveData<Long> getStartTime() {
         return startTime;
     }
 
-    public LiveData<String> getEndTime() {
+    public LiveData<Long> getEndTime() {
         return endTime;
     }
 
@@ -88,17 +59,12 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
         endTime.setValue(getDateWithSameTime(endTime.getValue(), year, month, dayOfMonth));
     }
 
-    private String getDateWithSameTime(String dateTime, int year, int month, int dayOfMonth) {
-        Date date;
-        try {
-            date = new SimpleDateFormat().parse(dateTime);
-            date.setYear(year-1900);
-            date.setMonth(month);
-            date.setDate(dayOfMonth);
-        } catch (ParseException ignore) {
-            date = new Date(year-1900, month, dayOfMonth);
-        }
-        return new SimpleDateFormat().format(date);
+    private long getDateWithSameTime(long dateTime, int year, int month, int dayOfMonth) {
+        Date date = new Date(dateTime);
+        date.setYear(year-1900);
+        date.setMonth(month);
+        date.setDate(dayOfMonth);
+        return date.getTime();
     }
 
     public void setStartTime(int hourOfDay, int minute) {
@@ -109,15 +75,10 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
         endTime.setValue(getTimeWithSameDate(endTime.getValue(), hourOfDay, minute));
     }
 
-    private String getTimeWithSameDate(String dateTime, int hourOfDay, int minute) {
-        Date date;
-        try {
-            date = new SimpleDateFormat().parse(dateTime);
-        } catch (ParseException ignore) {
-            date = new Date();
-        }
+    private long getTimeWithSameDate(long dateTime, int hourOfDay, int minute) {
+        Date date = new Date(dateTime);
         date.setHours(hourOfDay);
         date.setMinutes(minute);
-        return new SimpleDateFormat().format(date);
+        return date.getTime();
     }
 }
