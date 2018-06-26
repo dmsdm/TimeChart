@@ -1,4 +1,4 @@
-package com.example.timechart;
+package com.example.timechart.converter;
 
 import com.example.timechart.entity.TimeUnit;
 
@@ -14,43 +14,41 @@ import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
-public class RetrofitTest {
+import static org.junit.Assert.assertArrayEquals;
 
-    static class Result {
-        public List<TimeUnit> list;
-    }
+public class CustomConverterTest {
+
     interface Service {
         @GET("/")
-        Call<Result> exampleJson();
+        Call<List<TimeUnit>> exampleJson();
     }
 
-    private Service service;
+    Service service;
 
     @Before
     public void setUp() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
-        mockWebServer.enqueue(new MockResponse().setBody("{\"list\":[{\"time\":\"value\"}, {1000:100}, {1234:150]}}"));
-        // Start the server.
+        mockWebServer.enqueue(new MockResponse().setBody("1000:100,1234:150"));
         mockWebServer.start();
         HttpUrl url = mockWebServer.url("/");
         System.out.println("url = " + url);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(new ConverterFactory())
                 .build();
         service = retrofit.create(Service.class);
-
-
     }
 
     @Test
-    public void response() throws Exception {
+    public void convert() throws Exception {
+        Response<List<TimeUnit>> response = service.exampleJson().execute();
 
-        Response<Result> response = service.exampleJson().execute();
-        System.out.println(response.body().list);
+        TimeUnit[] actual = response.body().toArray(new TimeUnit[2]);
+        TimeUnit[] expected = new TimeUnit[]{new TimeUnit(1000, 100),
+                new TimeUnit(1234, 150)};
+        assertArrayEquals(expected, actual);
     }
 }

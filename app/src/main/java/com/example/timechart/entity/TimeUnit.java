@@ -17,4 +17,13 @@ public class TimeUnit {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TimeUnit) {
+            return ((TimeUnit) obj).time == this.time
+                    && ((TimeUnit) obj).value == this.value;
+        }
+        return super.equals(obj);
+    }
 }
