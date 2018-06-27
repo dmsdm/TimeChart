@@ -2,14 +2,17 @@ package com.example.timechart.viewmodel;
 
 import android.os.AsyncTask;
 
+import com.example.timechart.converter.ConverterFactory;
 import com.example.timechart.entity.Statistics;
 import com.example.timechart.entity.TimeUnit;
 import com.example.timechart.utils.MathUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+
+import retrofit2.Retrofit;
 
 public class TimeChartLoader extends AsyncTask<Long, Void, TimeChartLoader.Result> {
 
@@ -19,9 +22,16 @@ public class TimeChartLoader extends AsyncTask<Long, Void, TimeChartLoader.Resul
     }
 
     private final OnLoadFinishedListener listener;
+    private final WebService service;
 
-    public TimeChartLoader(OnLoadFinishedListener listener) {
+    public TimeChartLoader(OnLoadFinishedListener listener, String url) {
         this.listener = listener;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(new ConverterFactory())
+                .build();
+        service = retrofit.create(WebService.class);
+
     }
 
     @Override
@@ -33,13 +43,11 @@ public class TimeChartLoader extends AsyncTask<Long, Void, TimeChartLoader.Resul
     }
 
     private List<TimeUnit> loadTimeUnits(long startTime, long endTime) {
-        List<TimeUnit> timeUnits = new ArrayList<>();
-        if (endTime > startTime) {
-            long delta = (endTime - startTime) / 15;
-            Random rand = new Random(100);
-            for (long i = startTime; i <= endTime; i += delta) {
-                timeUnits.add(new TimeUnit(i, rand.nextInt(100)));
-            }
+        List<TimeUnit> timeUnits;
+        try {
+            timeUnits = service.getTimeUnitList(startTime, endTime).execute().body();
+        } catch (IOException e) {
+            timeUnits = new ArrayList<>();
         }
         return timeUnits;
     }

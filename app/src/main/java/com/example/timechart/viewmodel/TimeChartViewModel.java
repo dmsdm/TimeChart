@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.example.timechart.entity.Statistics;
 import com.example.timechart.entity.TimeUnit;
+import com.example.timechart.mock.WebServer;
 
 import java.util.Date;
 import java.util.List;
@@ -17,8 +18,15 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
     private MutableLiveData<Long> startTime = new MutableLiveData<>();
     private MutableLiveData<Long> endTime = new MutableLiveData<>();
     private MutableLiveData<Statistics> statistics = new MutableLiveData<>();
+    private WebServer webServer;
 
     public TimeChartViewModel() {
+        initDates();
+        webServer = new WebServer();
+        webServer.start();
+    }
+
+    private void initDates() {
         long endDate = new Date().getTime();
         long startDate = endDate - 1000*60*60*24*15;
         startTime.setValue(startDate);
@@ -26,7 +34,7 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
     }
 
     public void load() {
-        new TimeChartLoader(this).execute(startTime.getValue(), endTime.getValue());
+        new TimeChartLoader(this, webServer.getLocalWebServer()).execute(startTime.getValue(), endTime.getValue());
     }
 
     @Override
@@ -79,6 +87,7 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
         Date date = new Date(dateTime);
         date.setHours(hourOfDay);
         date.setMinutes(minute);
+        date.setSeconds(00);
         return date.getTime();
     }
 }
