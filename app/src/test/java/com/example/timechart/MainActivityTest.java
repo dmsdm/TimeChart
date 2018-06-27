@@ -58,6 +58,7 @@ public class MainActivityTest {
         assertNotNull(mainActivity.avgValue);
         assertNotNull(mainActivity.median);
         assertNotNull(mainActivity.iqRange);
+        assertNotNull(mainActivity.data);
     }
 
     @Test

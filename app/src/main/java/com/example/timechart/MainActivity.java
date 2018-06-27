@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @VisibleForTesting TextView median;
     @VisibleForTesting TextView iqRange;
     @VisibleForTesting ProgressBar progressBar;
+    @VisibleForTesting TextView data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         median = findViewById(R.id.mdn_value);
         iqRange = findViewById(R.id.iqr_value);
         progressBar = findViewById(R.id.progress);
+        data = findViewById(R.id.data);
     }
 
     private void setViewModel() {
@@ -72,6 +74,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(@Nullable List<TimeUnit> objects) {
                 chartView.setData(objects);
+                StringBuilder stringBuilder = new StringBuilder();
+                for (TimeUnit timeUnit : objects) {
+                    stringBuilder.append(new SimpleDateFormat().format(new Date(timeUnit.getTime())));
+                    stringBuilder.append("   ");
+                    stringBuilder.append(timeUnit.getValue());
+                    stringBuilder.append("\n");
+                }
+                data.setText(stringBuilder);
             }
         });
         viewModel.getStartTime().observe(this, new Observer<Long>() {
