@@ -27,6 +27,7 @@ public class ChartView extends View {
     private String maxText;
     private String startDate = "";
     private String endDate = "";
+    private String noDataText = "";
 
     public ChartView(Context context) {
         super(context);
@@ -70,6 +71,7 @@ public class ChartView extends View {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(25);
+        noDataText = getContext().getString(R.string.no_data);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class ChartView extends View {
     }
 
     private void drawNoData(Canvas canvas) {
-        canvas.drawText(getContext().getString(R.string.no_data), width / 2, height / 2, textPaint);
+        canvas.drawText(noDataText, width / 2, height / 2, textPaint);
     }
 
     private void drawAxis(Canvas canvas) {
@@ -123,5 +125,10 @@ public class ChartView extends View {
         canvas.drawText(maxText, 0, 50, textPaint);
         canvas.drawText(startDate, 0, height, textPaint);
         canvas.drawText(endDate, width - 200, height, textPaint);
+    }
+
+    public void setNoDataText(String text) {
+        noDataText = text;
+        invalidate();
     }
 }

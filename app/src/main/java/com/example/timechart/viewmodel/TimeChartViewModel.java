@@ -1,8 +1,11 @@
 package com.example.timechart.viewmodel;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.example.timechart.entity.Statistics;
 import com.example.timechart.entity.TimeUnit;
@@ -11,19 +14,31 @@ import com.example.timechart.mock.WebServer;
 import java.util.Date;
 import java.util.List;
 
-public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnLoadFinishedListener {
+public class TimeChartViewModel extends AndroidViewModel implements TimeChartLoader.OnLoadFinishedListener {
 
     private static final String TAG = "TimeChartViewModel";
     private MutableLiveData<List<TimeUnit>> timeChart = new MutableLiveData<>();
     private MutableLiveData<Long> startTime = new MutableLiveData<>();
     private MutableLiveData<Long> endTime = new MutableLiveData<>();
     private MutableLiveData<Statistics> statistics = new MutableLiveData<>();
+    private MutableLiveData<Boolean> progressState = new MutableLiveData<>();
     private WebServer webServer;
 
-    public TimeChartViewModel() {
+    public TimeChartViewModel(@NonNull Application application) {
+        super(application);
         initDates();
-        webServer = new WebServer();
-        webServer.start();
+        try {
+            webServer = new WebServer();
+            webServer.start();
+        } catch (Exception e) {
+            Toast.makeText(application, e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onCleared() {
+        webServer.stop();
+        webServer = null;
     }
 
     private void initDates() {
@@ -34,11 +49,18 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
     }
 
     public void load() {
-        new TimeChartLoader(this, webServer.getLocalWebServer()).execute(startTime.getValue(), endTime.getValue());
+        progressState.setValue(true);
+        try {
+            new TimeChartLoader(this, webServer.getLocalWebServer()).execute(startTime.getValue(), endTime.getValue());
+        } catch (Exception e) {
+            Toast.makeText(getApplication(), e.toString(), Toast.LENGTH_LONG).show();
+            progressState.setValue(false);
+        }
     }
 
     @Override
     public void onLoadFinished(TimeChartLoader.Result result) {
+        progressState.setValue(false);
         timeChart.setValue(result.timeUnits);
         statistics.setValue(result.statistics);
     }
@@ -89,5 +111,9 @@ public class TimeChartViewModel extends ViewModel implements TimeChartLoader.OnL
         date.setMinutes(minute);
         date.setSeconds(00);
         return date.getTime();
+    }
+
+    public LiveData<Boolean> getProgressState() {
+        return progressState;
     }
 }

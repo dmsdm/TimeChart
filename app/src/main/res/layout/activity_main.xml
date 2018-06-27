@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/spinner"
+        android:indeterminateOnly="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/min_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.example.timechart.views.ChartView
         android:id="@+id/chart_view"
         android:layout_width="0dp"

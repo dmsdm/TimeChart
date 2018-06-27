@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
@@ -27,7 +28,7 @@ public class TimeChartViewModelTest {
 
     @Before
     public void setUp() {
-        viewModel = new TimeChartViewModel();
+        viewModel = new TimeChartViewModel(RuntimeEnvironment.application);
     }
 
     @Test

@@ -59,4 +59,9 @@ public class MainActivityTest {
         assertNotNull(mainActivity.median);
         assertNotNull(mainActivity.iqRange);
     }
+
+    @Test
+    public void hasProgress() {
+        assertNotNull(mainActivity.progressBar);
+    }
 }

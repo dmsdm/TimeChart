@@ -8,6 +8,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.timechart.dialogs.DatePickerDialogFragment;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @VisibleForTesting TextView avgValue;
     @VisibleForTesting TextView median;
     @VisibleForTesting TextView iqRange;
+    @VisibleForTesting ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         avgValue = findViewById(R.id.avg_value);
         median = findViewById(R.id.mdn_value);
         iqRange = findViewById(R.id.iqr_value);
+        progressBar = findViewById(R.id.progress);
     }
 
     private void setViewModel() {
@@ -93,6 +96,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     median.setText(getString(R.string.median, statistics.median));
                     iqRange.setText(getString(R.string.iq_range, statistics.iqRange));
                 }
+            }
+        });
+        viewModel.getProgressState().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean visible) {
+                chartView.setNoDataText(visible ? "" : getString(R.string.no_data));
+                progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
             }
         });
     }

@@ -4,6 +4,7 @@ import com.example.timechart.converter.ConverterFactory;
 import com.example.timechart.entity.TimeUnit;
 import com.example.timechart.viewmodel.WebService;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,11 @@ public class WebServerTest {
                 .addConverterFactory(new ConverterFactory())
                 .build();
         service = retrofit.create(WebService.class);
+    }
+
+    @After
+    public void tearDown() {
+        webServer.stop();
     }
 
     @Test
